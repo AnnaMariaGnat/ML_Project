@@ -14,6 +14,9 @@ class pca_dr:
         self.n_components = n_components
         self.pca = PCA(n_components = self.n_components)
         self.scaler = pre.StandardScaler()
+        # self.scaler = pre.MinMaxScaler()
+        # self.scaler = pre.RobustScaler()
+        # self.scaler = pre.Normalizer()
 
     def fit(self, X):
         self.scaler.fit(X)
