@@ -1,13 +1,19 @@
 # implement PCA from scikit-learn for dimensionality reduction
 
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+import sklearn.preprocessing as pre
+
+'''
+TODO:
+    accept args for different parameters like which scaler to use:
+    StandardScaler, MinMaxScaler, etc.
+'''
 
 class pca_dr:
     def __init__(self, n_components = 2):
         self.n_components = n_components
         self.pca = PCA(n_components = self.n_components)
-        self.scaler = StandardScaler()
+        self.scaler = pre.StandardScaler()
 
     def fit(self, X):
         self.scaler.fit(X)
