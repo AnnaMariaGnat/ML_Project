@@ -9,7 +9,7 @@ TODO:
     StandardScaler, MinMaxScaler, etc.
 '''
 
-class pca_class:
+class pca_dr:
     def __init__(self, n_components = 2):
         self.n_components = n_components
         self.pca = PCA(n_components = self.n_components)
