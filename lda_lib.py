@@ -38,19 +38,10 @@ class lda_ajp:
 
     def scatter_between(self):
         ''' Finds the between-class scatter matrix and saves it as a numpy array '''
-
-        ''' NEEDS TO BE FIXED '''
-        ''' Dara said: 
-        - They masked the feature matrix X to have all observations of each class (x1, x2, ...),
-        - They counted the number of observations in each class (n1, n2, ...),
-        - Found the mean for each class (5 different vectors),
-        - Subtracted the global mean (a single 784x1 vector of means for each feature),
-        - And basically in the end used formula.'''
-
         scatter_between = np.zeros((self.X.shape[1], self.X.shape[1])) # Initialize scatter matrix with zeros.
         for i in range(len(np.unique(self.y))): # For each class in y...
             number_observations = self.X[self.y == i].shape[0] # ...find the number of data points in the class...
-            scatter_between += number_observations * np.dot( # ...multiply the number of data points with the dot product of...
+            scatter_between += number_observations * np.outer( # ...multiply the number of data points with the dot product of...
                 (self.class_means[i] - self.central_point).T, # ...the difference between the class mean and the central point...
                 (self.class_means[i] - self.central_point)) # ...and the transpose of the same difference.
         scatter_between = scatter_between / self.X.shape[0] # Divide by the number of data points to scale the matrix.
@@ -75,10 +66,11 @@ class lda_ajp:
         eigenvects = eigenvects[:,idx] # Sort the eigenvectors according to the sorted indices.
         return eigenvals, eigenvects
        
-    def transformed_data(self, n_ld=2):
+    def projection_matrix(self, n_ld=2):
         ''' Finds the transformed data and saves it as a numpy array '''
         top_eigenvects = self.main_lds(n_ld) # Find the main linear discriminants.
-        X_lda = np.dot(self.X, top_eigenvects) # Multiply the data with the eigenvectors.
+        X_lda = np.dot(top_eigenvects.T, self.X.T) # Project the data onto the main linear discriminants.
+        X_lda = X_lda.T # Transpose the data to get the correct shape.
         return X_lda
 
     def main_lds(self, n_ld=2):
