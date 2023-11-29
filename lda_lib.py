@@ -1,105 +1,88 @@
-from sklearn import discriminant_analysis
 import numpy as np
-import sys
-
-class lda_skl:
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
-
-    def lda(self):
-        lda = discriminant_analysis.LinearDiscriminantAnalysis()
-        lda.fit(self.X, self.y)
-        return lda
-    
 
 class lda_ajp:
+    ''' Linear Discriminant Analysis class implemented by 
+        Anna Maria Gnat, Josefine Nyeng and Pedro Prazeres
+        for the Machine Learning course at ITU CPH '''
+    
     def __init__(self, X, y):
-        self.X = X
-        self.y = y
-        self.normalized_scatter_within = None
+        ''' Initializes the class with the data and classes '''
+        self.X = X # Data
+        self.y = y # Classes
+        # Mean of each class (used several times so just initialize it once)
+        self.class_means = self.class_means()
+        # Central point (mean) of the means of each class (used several times so just initialize it once)
+        self.central_point = self.central_point()
 
     def class_means(self):
-        class_means = np.array([np.mean(self.X[self.y == i], axis=0) for i in np.unique(self.y)])
+        ''' Finds the mean of each class' data points and saves them as a numpy array '''
+        class_means = np.array(
+            [np.mean(self.X[self.y == i], axis=0) # Mean of all data points in class i...
+                     for i in np.unique(self.y)]) # ...for each class in y.
         return class_means
     
     def central_point(self):
-        class_means = self.class_means()
-        central_point = np.mean(class_means, axis=0)
+        ''' Finds the central point of the data and saves it as a numpy array '''
+        central_point = np.mean(self.class_means, axis=0) # Mean of all class means.
         return central_point
 
-    def normalized_det(self, matrix, min, max):
-        print("Normalizing matrix and trying again...")
-        normalized_matrix = (matrix - min) / (max - min)
-        try:
-            determinant = np.linalg.det(normalized_matrix)
-            print("Determinant:", determinant)
-            self.normalized_scatter_within = normalized_matrix
-            return determinant
-        except Exception as e:
-            print(f"Determinant could not be computed due to following exception: {e}")
-            return None
-
-    def scatter_det(self, matrix=None):
-        if matrix is None:
-            matrix = self.scatter_within()
-        max_value = np.max(matrix)
-        min_value = np.min(matrix)
-        if max_value > sys.float_info.max or min_value < sys.float_info.min:
-            print("Matrix contains extreme values, attempting to compute determinant:")
-            try:
-                determinant = np.linalg.det(matrix)
-                if determinant == 0:
-                    print("Matrix is singular and cannot be inverted (determinant is 0)")
-                    determinant = self.normalized_det(matrix, min_value, max_value)
-                elif determinant == np.inf:
-                    print("Matrix is singular and cannot be inverted (determinant is inf)")
-                    determinant = self.normalized_det(matrix, min_value, max_value)
-                else:
-                    print("Determinant:", determinant)
-            except Exception as e:
-                print(f"Determinant could not be computed due to following exception: {e}")
-                determinant = self.normalized_det(matrix, min_value, max_value)
-        else:
-            determinant = np.linalg.det(matrix)
-        return determinant
-
-
     def scatter_within(self):
-        class_means = self.class_means()
-        if self.normalized_scatter_within is not None:
-            return self.normalized_scatter_within
-        scatter_within = np.zeros((self.X.shape[1], self.X.shape[1]))
-        for i in range(len(np.unique(self.y))):
-            scatter_within += np.dot((self.X[self.y == i] - class_means[i]).T, (self.X[self.y == i] - class_means[i]))
+        ''' Finds the within-class scatter matrix and saves it as a numpy array '''
+        scatter_within = np.zeros((self.X.shape[1], self.X.shape[1])) # Initialize scatter matrix.
+        for i in range(len(np.unique(self.y))): # For each class in y...
+            scatter_within += np.dot( # ...add the dot product of the difference...
+                (self.X[self.y == i] - self.class_means[i]).T, # ...between the data points in the class and the class mean...
+                                     (self.X[self.y == i] - self.class_means[i])) # ...and the transpose of the same difference.
+        scatter_within = scatter_within / self.X.shape[0] # Divide by the number of data points to scale the matrix.
         return scatter_within
 
-
     def scatter_between(self):
-        class_means = self.class_means()
-        central_point = self.central_point()
-        scatter_between = np.zeros((self.X.shape[1], self.X.shape[1]))
-        for i in range(len(np.unique(self.y))):
-            number_observations = self.X[self.y == i].shape[0]
-            scatter_between += number_observations * np.dot((class_means[i] - central_point).T, (class_means[i] - central_point))
+        ''' Finds the between-class scatter matrix and saves it as a numpy array '''
+
+        ''' NEEDS TO BE FIXED '''
+        ''' Dara said: 
+        - They masked the feature matrix X to have all observations of each class (x1, x2, ...),
+        - They counted the number of observations in each class (n1, n2, ...),
+        - Found the mean for each class (5 different vectors),
+        - Subtracted the global mean (a single 784x1 vector of means for each feature),
+        - And basically in the end used formula.'''
+
+        scatter_between = np.zeros((self.X.shape[1], self.X.shape[1])) # Initialize scatter matrix with zeros.
+        for i in range(len(np.unique(self.y))): # For each class in y...
+            number_observations = self.X[self.y == i].shape[0] # ...find the number of data points in the class...
+            scatter_between += number_observations * np.dot( # ...multiply the number of data points with the dot product of...
+                (self.class_means[i] - self.central_point).T, # ...the difference between the class mean and the central point...
+                (self.class_means[i] - self.central_point)) # ...and the transpose of the same difference.
+        scatter_between = scatter_between / self.X.shape[0] # Divide by the number of data points to scale the matrix.
         return scatter_between
     
     def lda_matrix(self):
-        scatter_within = self.scatter_within()
-        scatter_between = self.scatter_between()
-        lda_matrix = np.dot(np.linalg.inv(scatter_within), scatter_between)
+        ''' Finds the LDA matrix and saves it as a numpy array '''
+        scatter_within = self.scatter_within() # Find the within-class scatter matrix.
+        scatter_between = self.scatter_between() # Find the between-class scatter matrix.
+        lda_matrix = np.dot( # Find the LDA matrix by multiplying...
+            np.linalg.inv(scatter_within), # ...the inverse of the within-class scatter matrix...
+            scatter_between) # ...with the between-class scatter matrix.
         return lda_matrix
     
     def lin_discs(self):
-        lda_matrix = self.lda_matrix()
-        eigenvals, eigenvects = np.linalg.eig(lda_matrix)
-        idx = eigenvals.argsort()
-        idx = idx[::-1]
-        eigenvals = eigenvals[idx]
-        eigenvects = eigenvects[:,idx]
+        ''' Finds the linear discriminants and saves them as numpy arrays '''
+        lda_matrix = self.lda_matrix() # Find the LDA matrix.
+        eigenvals, eigenvects = np.linalg.eigh(lda_matrix) # Find the eigenvalues and eigenvectors of the LDA matrix.
+        idx = eigenvals.argsort() # Sort the eigenvalues and eigenvectors (ascending order).
+        idx = idx[::-1] # Reverse the order of the sorted eigenvalues and eigenvectors (descending order).
+        eigenvals = eigenvals[idx] # Sort the eigenvalues according to the sorted indices.
+        eigenvects = eigenvects[:,idx] # Sort the eigenvectors according to the sorted indices.
         return eigenvals, eigenvects
-    
-    def main_lds(self, n_ld=1):
-        vals, vects = self.lin_discs()
-        main_lds = vects[:, :n_ld]
+       
+    def transformed_data(self, n_ld=2):
+        ''' Finds the transformed data and saves it as a numpy array '''
+        top_eigenvects = self.main_lds(n_ld) # Find the main linear discriminants.
+        X_lda = np.dot(self.X, top_eigenvects) # Multiply the data with the eigenvectors.
+        return X_lda
+
+    def main_lds(self, n_ld=2):
+        ''' Finds the main linear discriminants and saves them as a numpy array '''
+        _, vects = self.lin_discs() # Find the eigenvectors of the LDA matrix.
+        main_lds = vects[:, :n_ld] # Find the main linear discriminants by taking the first n_ld eigenvectors.
         return main_lds
