@@ -14,7 +14,7 @@ class Bayes_classifier:
         self.class_variance = self.variances()
 
     def means(self): 
-        means = dict({})
+        means = dict()
         for i in np.unique(self.y):
             meanfeatures = []
             for feature in range(self.projection_matrix.shape[1]):
@@ -24,7 +24,7 @@ class Bayes_classifier:
         return means
     
     def variances(self): 
-        variances = dict({})
+        variances = dict()
         for i in np.unique(self.y):
             variancefeatures = []
             for feature in range(self.projection_matrix.shape[1]):
@@ -44,8 +44,12 @@ class Bayes_classifier:
     def pdf(self,testx): 
         means = self.means()
         variances = self.variances()
+        pdfs= dict()
         for i in np.unique(self.y):
-            exponent = math.exp((-1/2)*(testx - mean))
+            pdfs_features = []
+            for feature in range(self.projection_matrix.shape[1]):
+                exponent = math.exp((-1/2)*((testx - means[i][feature])/variances[i][feature])^2)
+                pdf = 
 
 
 
