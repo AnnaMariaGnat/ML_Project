@@ -39,6 +39,6 @@ class Bayes_classifier:
             class_priors.append(class_prior)
         return class_priors
     
-    def pdf(mean,variance, testx): 
+    # def pdf(mean,variance, testx): 
 
     
