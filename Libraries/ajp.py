@@ -1,11 +1,49 @@
+''' Implementation of different classifiers, dimensionality reduction, and
+    feature selection methods (own implementations and from sklearn).
+    By Anna Maria Gnat, Josefine Nyeng and Pedro Prazeres
+    for the Machine Learning course at ITU CPH. '''
+
+
+
+''' Required libraries '''
+from sklearn.decomposition import PCA
+import sklearn.preprocessing as pre
 import numpy as np
+
+
+
+class pca_ajp:
+    ''' Principal Component Analysis class,
+        from sklearn's library '''
+
+    def __init__(self, n_components = 2):
+        ''' Initializes the class with the data and classes '''
+        self.n_components = n_components # Number of components to keep
+        self.pca = PCA(n_components = self.n_components) # Initialize PCA from sklearn
+        self.scaler = pre.StandardScaler() # Standardize features by removing the mean and scaling to unit variance
+
+    def fit(self, X):
+        ''' Fits the PCA model to the data '''
+        self.scaler.fit(X) # Fit the scaler with sklearn
+        X_scaled = self.scaler.transform(X) # Scale the data with sklearn
+        self.pca.fit(X_scaled) # Fit the PCA model with sklearn
+
+    def transform(self, X):
+        ''' Transforms the data with the PCA model '''
+        X_scaled = self.scaler.transform(X) # Scale the data with sklearn
+        return self.pca.transform(X_scaled) # Transform the data with sklearn
+    
+    def relevant_components(self):
+        ''' Returns the variance ratio of the components '''
+        return self.pca.explained_variance_ratio_
+
+
 
 class lda_ajp:
     ''' Linear Discriminant Analysis class implemented by 
         Anna Maria Gnat, Josefine Nyeng and Pedro Prazeres
         for the Machine Learning course at ITU CPH '''
     
-
     def __init__(self, X, y):
         ''' Initializes the class with the data and classes '''
         self.X = X # Data
