@@ -28,11 +28,11 @@ class Bayes_classifier:
         for i in np.unique(self.y):
             variancefeatures = []
             for feature in range(self.projection_matrix.shape[1]):
-                variance=np.var(self.projection_matrix[self.y==i][:,feature])
+                variance=np.std(self.projection_matrix[self.y==i][:,feature])
                 variancefeatures.append(variance)
             variances[i] = variancefeatures 
         return variances
-    
+
     def class_priors(self): 
         class_priors=[]
         n = self.X.shape[0]
