@@ -1,5 +1,20 @@
 # Machine Learning Project 2023 - Fashion MNIST
 
+## Table of Contents
+- [Group Members](#group-members)
+- [Project Description](#project-description)
+- [Data](#data)
+- [Implementation](#implementation)
+- [Project Structure](#project-structure)
+
+
+
+## Group Members
+- Anna Maria Gnat (https://github.com/AnnaMariaGnat)
+- Josefine Nyeng (https://github.com/JosefineNyeng)
+- Pedro Prazeres (https://github.com/Pheadar)
+
+
 
 ## Project Description
 Exam project in the Machine Learning course for the BSc Program in Data Science at the IT University of Copenhagen, academic year 2023/24.
@@ -9,6 +24,7 @@ image of the item. The data for the project consists of 15,000 labelled images o
 the Zalando website (Xiao et al., 2017). This dataset is commonly known as the Fashion MNIST dataset.
 
 A more detailed description of the project can be found in the Project_Description.pdf file in the Information folder.
+
 
 
 ## Data
@@ -25,18 +41,21 @@ Each line describes a piece of clothing. The first 784 columns are the pixel val
 | 4 | Shirt |
 
 
+
 ## Implementation
-The project is implemented in Python 3.11. The following libraries are used:
-- numpy
-- pandas
-- matplotlib
-- sklearn
-- plotly
+The project is implemented in Python 3.11 and uses Jupyter Notebooks. The following libraries are used:
+- numpy (https://numpy.org/)
+- matplotlib (https://matplotlib.org/)
+- scikit-learn (https://scikit-learn.org/)
+- plotly (https://plotly.com/python/)
+- nbformat (https://nbformat.readthedocs.io/)
+- ipywidgets (https://ipywidgets.readthedocs.io/)
 
 Required libraries can be installed using the following command:
 ```bash
 pip install -r requirements.txt
 ```
+
 
 
 ## Project Structure
