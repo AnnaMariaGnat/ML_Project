@@ -65,16 +65,21 @@ The project is structured as follows:
 ├── Datasets
 │   ├── fashion_test.npy
 │   └── fashion_train.npy
+├── Exported_Data
+│   ├── LDA_projection.npy
+│   └── LDA_top2.npy
 ├── Information
 │   └── Project_Description.pdf
 ├── Libraries
 │   └── ajp.py
 ├── Notebooks
+│   ├── 00-Data_Exploration
+|   |   └── 00-Data_Exploration.ipynb
 │   ├── 01-EDA
 |   |   ├── 01-PCA.ipynb
 |   |   └── 02-LDA.ipynb
 │   ├── 02-Bayes
-|   |   ├── 01-Bayes.ipynb
+|   |   └── 03-Bayes.ipynb
 │   ├── 03-Logistic-Regression.ipynb
 │   ├── 04-Decision-Trees.ipynb
 │   └── 05-Neural-Networks.ipynb
