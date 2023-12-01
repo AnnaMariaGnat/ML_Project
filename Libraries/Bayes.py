@@ -1,5 +1,7 @@
 ''' Required libraries '''
 import numpy as np
+import math
+
 class Bayes_classifier:
 
     def __init__(self, X, y, proj):
@@ -39,6 +41,12 @@ class Bayes_classifier:
             class_priors.append(class_prior)
         return class_priors
     
-    def pdf(mean,variance, testx): 
+    def pdf(self,testx): 
+        means = self.means()
+        variances = self.variances()
+        for i in np.unique(self.y):
+            exponent = math.exp((-1/2)*(testx - mean))
+
+
 
     
