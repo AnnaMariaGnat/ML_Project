@@ -74,12 +74,12 @@ The project is structured as follows:
 │   └── ajp.py
 ├── Notebooks
 │   ├── 00-Data_Exploration
-|   |   └── 01-Data_Exploration.ipynb
+|   |   └── 00-Data_Exploration.ipynb
 │   ├── 01-EDA
 |   |   ├── 01-PCA.ipynb
 |   |   └── 02-LDA.ipynb
 │   ├── 02-Bayes
-|   |   └── 01-Bayes.ipynb
+|   |   └── 03-Bayes.ipynb
 │   ├── 03-Logistic-Regression.ipynb
 │   ├── 04-Decision-Trees.ipynb
 │   └── 05-Neural-Networks.ipynb
