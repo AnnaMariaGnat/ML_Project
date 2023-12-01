@@ -50,6 +50,7 @@ The project is implemented in Python 3.11 and uses Jupyter Notebooks. The follow
 - plotly (https://plotly.com/python/)
 - nbformat (https://nbformat.readthedocs.io/)
 - ipywidgets (https://ipywidgets.readthedocs.io/)
+- pytorch (https://pytorch.org/)
 
 Required libraries can be installed using the following command:
 ```bash
