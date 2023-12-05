@@ -8,11 +8,11 @@ def K(x, sd=1):
 def kdf(x, Class_feature, h, sd=1):
     ''' Returns the kernel density estimation for a given point x, array X and bandwidth h. '''
     n = len(Class_feature)
-    kdf = []
+    kdf = 0
     for i in Class_feature:
         kernel_density = K((x-i)/h, sd)
         kdf += kernel_density
-    print(kdf/h*n)
+    return kdf/h*n
 
 
 def looper(x, X, Y, h, sd=1):
@@ -20,11 +20,11 @@ def looper(x, X, Y, h, sd=1):
     kds = []
     for i in np.unique(Y):
         Class = X[Y==i]
-        class_tuple = []
+        class_tuple = np.array([])
         for feature in range(Class.shape[1]):
             class_feature = Class[:,feature]
-            kdf(x, class_feature, h, sd)
-            class_tuple.append(kdf)
+            value = kdf(x[feature], class_feature, h, sd)
+            class_tuple = np.append(class_tuple, value)
         kds.append(class_tuple)
     return kds
 
@@ -33,7 +33,6 @@ def class_kde(kds):
     ''' Returns the kernel density estimation for a given dataset, classes and bandwidth h. '''
     final = []
     for i in kds:
-        class_kde = i[0] * i[1]
+        class_kde = np.prod(i)
         final.append(class_kde)
     return final
-
