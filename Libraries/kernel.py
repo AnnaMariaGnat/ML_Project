@@ -23,7 +23,7 @@ def looper(x, X, Y, h, sd=1):
         class_tuple = np.array([])
         for feature in range(Class.shape[1]):
             class_feature = Class[:,feature]
-            value = kdf(x[feature], class_feature, h, sd)
+            value = kdf(x[:,feature], class_feature, h, sd)
             class_tuple = np.append(class_tuple, value)
         kds.append(class_tuple)
     return kds
@@ -36,3 +36,5 @@ def class_kde(kds):
         class_kde = np.prod(i)
         final.append(class_kde)
     return final
+
+
