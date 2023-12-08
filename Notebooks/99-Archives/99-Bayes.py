@@ -2,7 +2,7 @@
 import numpy as np
 import math
 
-class Bayes_classifier:
+class Bayes_classifier1:
 
     def __init__(self, X, y, proj):
         ''' Initializes the class with the data and classes '''
