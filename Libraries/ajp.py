@@ -11,7 +11,7 @@ import sklearn.preprocessing as pre
 import numpy as np
 
 
-
+'''This class is not used in the jupyter, we use the sklearn one instead'''
 class pca_ajp:
     ''' Principal Component Analysis class,
         from sklearn's library '''
