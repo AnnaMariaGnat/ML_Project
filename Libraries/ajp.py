@@ -33,9 +33,10 @@ class pca_ajp:
         X_scaled = self.scaler.transform(X) # Scale the data with sklearn
         return self.pca.transform(X_scaled) # Transform the data with sklearn
     
-    def relevant_components(self):
+    def explained_variance_ratio(self):
         ''' Returns the variance ratio of the components '''
         return self.pca.explained_variance_ratio_
+    
 
 
 
