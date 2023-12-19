@@ -79,7 +79,7 @@ class CNN:
             self.scheduler.step()
         return self.model
     
-    def get_params(self):
+    def get_params(self, deep=True):
         ''' Returns the parameters of the model '''
         return self.model.parameters()
 
