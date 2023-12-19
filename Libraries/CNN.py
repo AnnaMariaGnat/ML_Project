@@ -36,7 +36,7 @@ class NeuralNetwork(nn.Module):
         x = self.fc2(self.dropout2(x))
         return F.log_softmax(x, dim=1)
 
-class CNN:
+class CNN(BaseEstimator):
     ''' CNN class '''
     def __init__(self, epochs=20, lr=0.01, batch_size=100):
         self.batch_size = batch_size
@@ -79,9 +79,9 @@ class CNN:
             self.scheduler.step()
         return self.model
     
-    def get_params(self, deep=True):
-        ''' Returns the parameters of the model '''
-        return self.model.parameters()
+    # def get_params(self, deep=True):
+    #     ''' Returns the parameters of the model '''
+    #     return self.model.parameters()
 
     def predict(self, testingX):
         ''' Predicts the class of the testing data,

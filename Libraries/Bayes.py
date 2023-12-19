@@ -1,14 +1,24 @@
 import numpy as np
 import math
+from ajp import lda_ajp
+# This BaseEstimator is only imported to be able to use our Bayes classifier (implemented from scratch) as an estimator in the sklearn cross validation functions
+from sklearn.base import BaseEstimator
 
-class Bayes_classifier:
 
-    def __init__(self, proj_matrix, y, h):
-        self.proj_matrix = proj_matrix
-        self.y = y 
+class Bayes_classifier(BaseEstimator):
+
+    def __init__(self, h):
         self.h=h
+        
+    
+    def fit(self, X, y): 
+        self.X = X
+        self.y = y
+        self.lda = lda_ajp(X,y)
+        self.proj_matrix = self.lda.projection_matrix()
         self.n_features = self.proj_matrix.shape[1]
         self.n_observations = self.proj_matrix.shape[0]
+
 
     def class_priors(self): 
         class_priors = []
@@ -59,12 +69,13 @@ class Bayes_classifier:
         return prediction 
 
 
-    def classify_test_input(self, test_data): 
+    def predict(self, test_data): 
         predictions = []
-        for i in range(test_data.shape[0]):
-            print(i)
-            # prediction = self.classification(i)
-            # predictions.append(prediction)
+        new_data = self.lda.transform(test_data)
+        print(new_data.T.shape)
+        for i in new_data.T:
+            prediction = self.classification(i)
+            predictions.append(prediction)
         return predictions 
 
 
