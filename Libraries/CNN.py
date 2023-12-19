@@ -42,16 +42,6 @@ class CNN:
         self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=2, gamma=0.1)
         self.criterion = nn.CrossEntropyLoss()
 
-    # def load_data(self, trainX, trainY, testX):
-    #     ''' Converts data to tensor and loads into the model '''
-    #     if testX == []:
-    #         tensor_train_X = torch.Tensor(trainX).reshape(-1, 1, 28, 28)
-    #         tensor_train_y = torch.Tensor(trainY).long()
-    #         self.train_loader = DataLoader(list(zip(tensor_train_X, tensor_train_y)), batch_size=self.batch_size, shuffle=True)
-    #     if trainX == [] and trainY == []:
-    #         tensor_test_X = torch.Tensor(testX).reshape(-1, 1, 28, 28)
-    #         self.test_loader = DataLoader(tensor_test_X, batch_size=self.batch_size, shuffle=False)
-
     def load_training(self, trainX, trainY):
         ''' Converts data to tensor and loads into the model '''
         tensor_train_X = torch.Tensor(trainX).reshape(-1, 1, 28, 28)
@@ -63,7 +53,6 @@ class CNN:
         tensor_test_X = torch.Tensor(testX).reshape(-1, 1, 28, 28)
         self.test_loader = DataLoader(tensor_test_X, batch_size=self.batch_size, shuffle=False)
     
-
     def fit(self, trainingX, trainingY):
         ''' Trains the model, returns the fitted model '''
         # Data loading
@@ -81,7 +70,6 @@ class CNN:
             self.scheduler.step()
         return self.model
 
-
     def predict(self, testingX):
         ''' Predicts the class of the testing data,
         returns the classes of the testing data '''
@@ -95,9 +83,8 @@ class CNN:
                 data = data.to(self.device)
                 output = self.model(data)
                 pred = output.argmax(dim=1, keepdim=True)
-                classes = torch.cat((classes, pred.cpu()), dim=0)
+                classes = torch.cat((classes, pred), dim=0)
         return classes
-
 
     def save_model(self, model_name):
         ''' Saves the trained model '''
@@ -107,7 +94,6 @@ class CNN:
         else:
             torch.save(self.model.state_dict(), model_name)
     
-
     def load_model(self, model_name):
         ''' Loads the model '''
         self.model.load_state_dict(torch.load(model_name))
