@@ -4,7 +4,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
+import numpy as np
 
+from sklearn.base import BaseEstimator
+
+
+class MyEstimator(BaseEstimator):
+    ''' Base estimator class for CNN '''
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+        self.model = None
 
 class NeuralNetwork(nn.Module):
     ''' Neural Network class for CNN '''
@@ -69,6 +78,10 @@ class CNN:
                 self.optimizer.step()
             self.scheduler.step()
         return self.model
+    
+    def get_params(self):
+        ''' Returns the parameters of the model '''
+        return self.model.parameters()
 
     def predict(self, testingX):
         ''' Predicts the class of the testing data,
@@ -84,6 +97,11 @@ class CNN:
                 output = self.model(data)
                 pred = output.argmax(dim=1, keepdim=True)
                 classes = torch.cat((classes, pred), dim=0)
+        
+        # Convert to numpy array
+        classes = np.array(classes)
+        classes = classes.astype(int)
+        classes = classes.reshape(classes.shape[0],)
         return classes
 
     def save_model(self, model_name):
