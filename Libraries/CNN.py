@@ -89,13 +89,13 @@ class CNN:
         self.load_testing(testX=testingX)
 
         self.model.eval()
-        classes = []
+        classes = torch.Tensor()
         with torch.no_grad():
             for _, data in enumerate(self.test_loader):
                 data = data.to(self.device)
                 output = self.model(data)
                 pred = output.argmax(dim=1, keepdim=True)
-                classes.append(pred)
+                classes = torch.cat((classes, pred.cpu()), dim=0)
         return classes
 
 
