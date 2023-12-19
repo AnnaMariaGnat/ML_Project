@@ -96,7 +96,10 @@ class CNN(BaseEstimator):
                 data = data.to(self.device)
                 output = self.model(data)
                 pred = output.argmax(dim=1, keepdim=True)
-                classes = torch.cat((classes, pred), dim=0)
+                if self.device == "cuda":
+                    classes = torch.cat((classes, pred.cuda()), dim=0)
+                else:
+                    classes = torch.cat((classes, pred.cpu()), dim=0)
         
         # Convert to numpy array
         classes = np.array(classes)
