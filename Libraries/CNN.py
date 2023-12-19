@@ -33,26 +33,25 @@ class CNN:
         self.batch_size = batch_size
         self.epochs = epochs
         self.lr = lr
-        # Model parameters:
-        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
-        self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=2, gamma=0.1)
-        self.criterion = nn.CrossEntropyLoss()
         # Model initialization:
         self.model = NeuralNetwork()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
+        # Model parameters:
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+        self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=2, gamma=0.1)
+        self.criterion = nn.CrossEntropyLoss()
 
 
     def load_data(self, trainX=[], trainY=[], testX=[], testY=[]):
         ''' Converts data to tensor and loads into the model '''
-        if testX == [] and testY == []:
-            tensor_train_X = torch.Tensor(self.trainingX).reshape(-1, 1, 28, 28)
-            tensor_train_y = torch.Tensor(self.trainingY).long()
+        if testX == []:
+            tensor_train_X = torch.Tensor(trainX).reshape(-1, 1, 28, 28)
+            tensor_train_y = torch.Tensor(trainY).long()
             self.train_loader = DataLoader(list(zip(tensor_train_X, tensor_train_y)), batch_size=self.batch_size, shuffle=True)
         if trainX == [] and trainY == []:
-            tensor_test_X = torch.Tensor(self.testingX).reshape(-1, 1, 28, 28)
-            tensor_test_y = torch.Tensor(self.testingY).long()
-            self.test_loader = DataLoader(list(zip(tensor_test_X, tensor_test_y)), batch_size=self.batch_size, shuffle=False)
+            tensor_test_X = torch.Tensor(testX).reshape(-1, 1, 28, 28)
+            self.test_loader = DataLoader(tensor_test_X, batch_size=self.batch_size, shuffle=False)
     
 
     def fit(self, trainingX, trainingY):
@@ -62,7 +61,6 @@ class CNN:
 
         self.model.train()
         for epoch in range(1, self.epochs + 1):
-            self.scheduler.step()
             for _, (data, target) in enumerate(self.train_loader):
                 data, target = data.to(self.device), target.to(self.device)
                 self.optimizer.zero_grad()
@@ -70,20 +68,21 @@ class CNN:
                 loss = self.criterion(output, target)
                 loss.backward()
                 self.optimizer.step()
+            self.scheduler.step()
         return self.model
 
 
-    def predict(self, testingX, testingY):
+    def predict(self, testingX):
         ''' Predicts the class of the testing data,
         returns the classes of the testing data '''
         # Data loading
-        self.load_data(testX=testingX, testY=testingY)
+        self.load_data(testX=testingX)
 
         self.model.eval()
         classes = []
         with torch.no_grad():
-            for _, (data, target) in enumerate(self.test_loader):
-                data, target = data.to(self.device), target.to(self.device)
+            for _, data in enumerate(self.test_loader):
+                data = data.to(self.device)
                 output = self.model(data)
                 pred = output.argmax(dim=1, keepdim=True)
                 classes.append(pred)
