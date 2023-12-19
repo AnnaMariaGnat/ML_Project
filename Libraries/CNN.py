@@ -29,36 +29,37 @@ class NeuralNetwork(nn.Module):
 
 class CNN:
     ''' CNN class '''
-    def __init__(self, trainingX, testingX, trainingY, testingY, epochs=20, lr=0.01,):
-        self.trainingX = trainingX
-        self.testingX = testingX
-        self.trainingY = trainingY
-        self.testingY = testingY
-        self.batch_size = int(len(trainingX)/20)
+    def __init__(self, epochs=20, lr=0.01, batch_size=100):
+        self.batch_size = batch_size
         self.epochs = epochs
         self.lr = lr
+        # Model parameters:
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
         self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=2, gamma=0.1)
         self.criterion = nn.CrossEntropyLoss()
+        # Model initialization:
         self.model = NeuralNetwork()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
-        self.load_data()
 
-    def load_data(self):
-        ''' Loads the data into the model '''
-        # Convert to tensor and reshape
-        if any in [type(self.trainingX), type(self.trainingY), type(self.testingX), type(self.testingY)] != torch.Tensor:
+
+    def load_data(self, trainX=[], trainY=[], testX=[], testY=[]):
+        ''' Converts data to tensor and loads into the model '''
+        if testX == [] and testY == []:
             tensor_train_X = torch.Tensor(self.trainingX).reshape(-1, 1, 28, 28)
             tensor_train_y = torch.Tensor(self.trainingY).long()
+            self.train_loader = DataLoader(list(zip(tensor_train_X, tensor_train_y)), batch_size=self.batch_size, shuffle=True)
+        if trainX == [] and trainY == []:
             tensor_test_X = torch.Tensor(self.testingX).reshape(-1, 1, 28, 28)
             tensor_test_y = torch.Tensor(self.testingY).long()
-        # Create DataLoaders
-        self.train_loader = DataLoader(list(zip(tensor_train_X, tensor_train_y)), batch_size=self.batch_size, shuffle=True)
-        self.test_loader = DataLoader(list(zip(tensor_test_X, tensor_test_y)), batch_size=self.batch_size, shuffle=False)
+            self.test_loader = DataLoader(list(zip(tensor_test_X, tensor_test_y)), batch_size=self.batch_size, shuffle=False)
     
-    def fit(self):
+
+    def fit(self, trainingX, trainingY):
         ''' Trains the model, returns the fitted model '''
+        # Data loading
+        self.load_data(trainX=trainingX, trainY=trainingY)
+
         self.model.train()
         for epoch in range(1, self.epochs + 1):
             self.scheduler.step()
@@ -71,9 +72,13 @@ class CNN:
                 self.optimizer.step()
         return self.model
 
-    def predict(self):
+
+    def predict(self, testingX, testingY):
         ''' Predicts the class of the testing data,
         returns the classes of the testing data '''
+        # Data loading
+        self.load_data(testX=testingX, testY=testingY)
+
         self.model.eval()
         classes = []
         with torch.no_grad():
@@ -84,10 +89,16 @@ class CNN:
                 classes.append(pred)
         return classes
 
+
     def save_model(self, model_name):
-        ''' Saves the model '''
-        torch.save(self.model.state_dict(), model_name)
+        ''' Saves the trained model '''
+        if self.model == None:
+            print("Model is not trained yet!")
+            return
+        else:
+            torch.save(self.model.state_dict(), model_name)
     
+
     def load_model(self, model_name):
         ''' Loads the model '''
         self.model.load_state_dict(torch.load(model_name))
