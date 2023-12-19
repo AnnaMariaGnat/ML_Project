@@ -67,7 +67,7 @@ class CNN:
     def fit(self, trainingX, trainingY):
         ''' Trains the model, returns the fitted model '''
         # Data loading
-        self.load_data(trainX=trainingX, trainY=trainingY)
+        self.load_training(trainX=trainingX, trainY=trainingY)
 
         self.model.train()
         for epoch in range(1, self.epochs + 1):
@@ -86,7 +86,7 @@ class CNN:
         ''' Predicts the class of the testing data,
         returns the classes of the testing data '''
         # Data loading
-        self.load_data(testX=testingX)
+        self.load_testing(testX=testingX)
 
         self.model.eval()
         classes = []
