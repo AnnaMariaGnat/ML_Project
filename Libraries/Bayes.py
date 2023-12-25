@@ -42,7 +42,7 @@ class Bayes_classifier(BaseEstimator):
                 for observation in Class_data:
                     input = (test_x[feature]-observation[feature])/self.h
                     kernel_sum += self.kernel(observation[feature], input)
-                kde_f = 1/class_n * kernel_sum
+                kde_f = (1/(class_n*self.h)) * kernel_sum
                 kde_feature =np.append(kde_feature, kde_f)
             kde.append(kde_feature)
         return kde 
