@@ -118,8 +118,7 @@ class lda_ajp:
     def projection(self, n_ld=2):
         ''' Creates a matrix of the projected data with n linear discriminants and saves it as a numpy array '''
         self.top_eigenvects = self.main_lds(n_ld) # Find the main linear discriminants.
-        X_lda = np.dot(self.top_eigenvects.T, self.X.T) # Project the data onto the main linear discriminants.
-        X_lda = X_lda.T # Transpose the data to get the correct shape.
+        X_lda = np.dot(self.X, self.top_eigenvects) # Project the data onto the main linear discriminants.
         return X_lda # Return the projected data.
 
 

@@ -52,6 +52,9 @@ The project is implemented in Python 3.11 and uses Jupyter Notebooks. The follow
 - nbformat (https://nbformat.readthedocs.io/)
 - ipywidgets (https://ipywidgets.readthedocs.io/)
 - pytorch (https://pytorch.org/)
+- torchvision (https://pytorch.org/vision/stable/index.html)
+- torchsummary (https://pypi.org/project/torchsummary/)
+- optuna (https://optuna.org/)
 
 Required libraries can be installed using the following command:
 ```bash
