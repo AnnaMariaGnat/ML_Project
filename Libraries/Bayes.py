@@ -3,6 +3,7 @@ import math
 from ajp import lda_ajp
 # This BaseEstimator is only imported to be able to use our Bayes classifier (implemented from scratch) as an estimator in the sklearn cross validation functions
 from sklearn.base import BaseEstimator
+import multiprocessing
 
 
 class Bayes_classifier(BaseEstimator):
@@ -67,16 +68,38 @@ class Bayes_classifier(BaseEstimator):
         probs = self.posterior_prob(test_x)
         prediction = np.argmax(probs)
         return prediction 
+    
+    def parallel_classification(self, test_x):
+        return self.classification(test_x)
 
-
-    def predict(self, test_data): 
-        predictions = []
+    def predict(self, test_data):
         new_data = self.lda.transform(test_data)
         print(new_data.T.shape)
-        for i in new_data.T:
-            prediction = self.classification(i)
-            predictions.append(prediction)
-        return predictions 
+
+        # Set the number of processes to the desired number
+        num_processes = multiprocessing.cpu_count()
+
+        # Create a pool of processes
+        pool = multiprocessing.Pool(processes=num_processes)
+
+        # Distribute the work and collect the results
+        predictions = pool.map(self.parallel_classification, new_data.T)
+
+        # Close the pool and wait for the work to finish
+        pool.close()
+        pool.join()
+
+        return predictions
+
+
+    # def predict(self, test_data): 
+    #     predictions = []
+    #     new_data = self.lda.transform(test_data)
+    #     print(new_data.T.shape)
+    #     for i in new_data.T:
+    #         prediction = self.classification(i)
+    #         predictions.append(prediction)
+    #     return predictions 
 
 
         

@@ -4,17 +4,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
+from torchsummary import summary
 import numpy as np
 from sklearn.base import BaseEstimator
+import os
 
-
-class MyEstimator(BaseEstimator):
-    ''' Base estimator class for CNN '''
-    def __init__(self, verbose=False):
-        self.verbose = verbose
-        self.model = None
-
-
+current_directory = os.getcwd()
+parent_directory = os.path.dirname(current_directory)
+home_directory = os.path.dirname(parent_directory)
+exported_data_path = os.path.join(home_directory, 'Exported_Data')
 
 class NeuralNetwork(nn.Module): # original 00
     # Our initial model
@@ -57,6 +55,8 @@ class CNN(BaseEstimator):
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
         self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=self.step_size, gamma=self.gamma)
         self.criterion = nn.CrossEntropyLoss()
+        # History:
+        self.history = {'loss': [], 'val_loss': []}
 
 
     def load_training(self, trainX, trainY):
@@ -72,20 +72,40 @@ class CNN(BaseEstimator):
         self.test_loader = DataLoader(tensor_test_X, batch_size=self.batch_size, shuffle=False)
 
 
-    def fit(self, trainingX, trainingY):
+    def fit(self, trainingX, trainingY, validationX=None, validationY=None):
         ''' Trains the model, returns the fitted model '''
-        # Data loading
-        self.load_training(trainX=trainingX, trainY=trainingY)
-        self.model.train()
-        for epoch in range(1, self.epochs + 1):
-            for _, (data, target) in enumerate(self.train_loader):
-                data, target = data.to(self.device), target.to(self.device)
-                self.optimizer.zero_grad()
-                output = self.model(data)
-                loss = self.criterion(output, target)
-                loss.backward()
-                self.optimizer.step()
-            self.scheduler.step()
+        try:
+            # Validate input data
+            if not isinstance(trainingX, np.ndarray):
+                raise ValueError("trainingX must be a numpy array")
+            if not isinstance(trainingY, np.ndarray):
+                raise ValueError("trainingY must be a numpy array")
+            # Data loading
+            self.load_training(trainX=trainingX, trainY=trainingY)
+            self.model.train()
+            for epoch in range(1, self.epochs + 1):
+                epoch_losses = []
+                for _, (data, target) in enumerate(self.train_loader):
+                    data, target = data.to(self.device), target.to(self.device)
+                    self.optimizer.zero_grad()
+                    output = self.model(data)
+                    loss = self.criterion(output, target)
+                    epoch_losses.append(loss.item()) # save loss
+                    loss.backward()
+                    self.optimizer.step()
+                self.scheduler.step()
+
+                # Record training loss
+                epoch_loss = np.mean(epoch_losses)
+                self.history['loss'].append(epoch_loss)
+
+                # Record validation loss and accuracy
+                if validationX is not None and validationY is not None:
+                    val_loss = self.evaluate(validationX, validationY)
+                    self.history['val_loss'].append(val_loss)
+                
+        except Exception as e:
+            print(f"An error occurred: {e}")
         return self.model
     
 
@@ -141,21 +161,28 @@ class CNN(BaseEstimator):
             print("Model is not trained yet!")
             return
         else:
-            torch.save(self.model.state_dict(), f'trained_models/{model_name}')
+            torch.save({'model_state_dict': self.model.state_dict(),
+                        'optimizer_state_dict': self.optimizer.state_dict(),
+                        'scheduler_state_dict': self.scheduler.state_dict(),
+                        'history': self.history}, os.path.join(exported_data_path, model_name))
 
 
     def load_model(self, model_name='CNNmodel'):
         ''' Loads the model '''
-        self.model.load_state_dict(torch.load(f'trained_models/{model_name}'))
+        checkpoint = torch.load(os.path.join(exported_data_path, model_name))
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+        self.history = checkpoint['history']
         self.model.eval()
 
 
     def summary(self):
-        ''' Prints the summary with the layers and parameters of the model '''
+        ''' Prints a detailed summary of the model '''
         print("Model summary:")
         print("Epochs:", self.epochs)
         print("Learning rate:", self.lr)
         print("Layers:")
-        print(self.model)
+        summary(self.model, input_size=(1, 28, 28))  # Assuming input size is (1, 28, 28)
         print("Criterion:")
         print(self.criterion)

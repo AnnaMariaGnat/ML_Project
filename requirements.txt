@@ -1,7 +1,9 @@
 numpy
 matplotlib
+pandas
 scikit-learn
 plotly
 nbformat
 ipywidgets
-torch
+torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+seaborn

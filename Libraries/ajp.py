@@ -120,7 +120,7 @@ class lda_ajp:
         self.top_eigenvects = self.main_lds(n_ld) # Find the main linear discriminants.
         X_lda = np.dot(self.top_eigenvects.T, self.X.T) # Project the data onto the main linear discriminants.
         X_lda = X_lda.T # Transpose the data to get the correct shape.
-        return X_lda
+        return X_lda # Return the projected data.
 
 
     def main_lds(self, n_ld=2):
@@ -129,8 +129,9 @@ class lda_ajp:
         main_lds = vects[:, :n_ld] # Find the main linear discriminants by taking the first n_ld eigenvectors.
         return main_lds
     
-    def transform(self, data_X): 
-        if self.top_eigenvects is None:
-            return 
-        X_lda = np.dot(self.top_eigenvects.T, data_X.T)
-        return X_lda 
+    def transform(self, data_X):
+        ''' Transforms the data with the LDA model '''
+        if self.top_eigenvects is None: # If the top eigenvectors have not been calculated yet...
+            return  # ...return nothing.
+        X_lda = np.dot(self.top_eigenvects.T, data_X.T) # Project the data onto the main linear discriminants.
+        return X_lda  # Return the projected data.
