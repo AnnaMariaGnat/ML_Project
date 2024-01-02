@@ -115,7 +115,7 @@ class lda_ajp:
         return eigenvals, eigenvects
 
 
-    def projection_matrix(self, n_ld=2):
+    def projection(self, n_ld=2):
         ''' Creates a matrix of the projected data with n linear discriminants and saves it as a numpy array '''
         self.top_eigenvects = self.main_lds(n_ld) # Find the main linear discriminants.
         X_lda = np.dot(self.top_eigenvects.T, self.X.T) # Project the data onto the main linear discriminants.
