@@ -5,6 +5,7 @@ scikit-learn
 plotly
 nbformat
 ipywidgets
-torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+torch
+torchvision
 torchsummary
 optuna
