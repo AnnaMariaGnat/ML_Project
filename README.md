@@ -23,6 +23,8 @@
 - Josefine Nyeng (https://github.com/JosefineNyeng)
 - Pedro Prazeres (https://github.com/Pheadar)
 
+[Back to top](#table-of-contents)
+
 ---
 
 ## Project Description
@@ -32,6 +34,8 @@ Exam project in the Machine Learning course for the BSc Program in Data Science 
 This is a group project, where we will explore different methods for determining the type of clothing from an
 image of the item. The data for the project consists of 15,000 labelled images of clothing based on images from
 the Zalando website (Xiao et al., 2017). This dataset is commonly known as the Fashion MNIST dataset.
+
+[Back to top](#table-of-contents)
 
 ---
 
@@ -48,6 +52,8 @@ Each line describes a piece of clothing. The first 784 columns are the pixel val
 | 2 | Pullover |
 | 3 | Dress |
 | 4 | Shirt |
+
+[Back to top](#table-of-contents)
 
 ---
 
@@ -81,6 +87,8 @@ The project aims to investigate methods for determining the type of clothing fro
 - Compile a comprehensive report detailing the methodology, experiments conducted, results obtained, and conclusions drawn.
 - Include visualizations and discussions on the model's performance and potential areas for improvement.
 
+[Back to top](#table-of-contents)
+
 ---
 
 ## Implementation
@@ -102,6 +110,7 @@ Required libraries can be installed using the following command:
 ```bash
 pip install -r requirements.txt
 ```
+[Back to top](#table-of-contents)
 
 ---
 
@@ -145,3 +154,5 @@ The project is structured as follows:
 ├── requirements.txt
 └── README.md
 ```
+
+[Back to top](#table-of-contents)
