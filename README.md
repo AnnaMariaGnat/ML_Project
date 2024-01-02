@@ -46,6 +46,7 @@ Each line describes a piece of clothing. The first 784 columns are the pixel val
 The project is implemented in Python 3.11 and uses Jupyter Notebooks. The following libraries are used:
 - numpy (https://numpy.org/)
 - matplotlib (https://matplotlib.org/)
+- pandas (https://pandas.pydata.org/)
 - scikit-learn (https://scikit-learn.org/)
 - plotly (https://plotly.com/python/)
 - nbformat (https://nbformat.readthedocs.io/)
@@ -65,28 +66,36 @@ The project is structured as follows:
 .
 ├── Datasets
 │   ├── fashion_test.npy
-│   └── fashion_train.npy
+|   ├── fashion_train.npy
+│   └── labels_dict.npy
 ├── Exported_Data
-│   ├── LDA_projection.npy
-│   └── LDA_top2.npy
-├── Information
-│   └── Project_Description.pdf
+│   └── (several images and plots, see Report/Final_Report.pdf)
 ├── Libraries
-│   └── ajp.py
+|   ├── ajp.py
+|   ├── Bayes.py
+|   ├── CNN.py
+|   ├── kernel.py
+│   └── SVM.py
 ├── Notebooks
 │   ├── 00-Data_Exploration
 |   |   └── 00-Data_Exploration.ipynb
 │   ├── 01-EDA
-|   |   ├── 01-PCA.ipynb
-|   |   └── 02-LDA.ipynb
+|   |   ├── 011-PCA.ipynb
+|   |   └── 012-LDA.ipynb
 │   ├── 02-Bayes
-|   |   └── 03-Bayes.ipynb
-│   ├── 03-Logistic-Regression.ipynb
-│   ├── 04-Decision-Trees.ipynb
-│   └── 05-Neural-Networks.ipynb
+|   |   └── 02-Bayes.ipynb
+│   ├── 03-CNN
+|   |   └── 03-CNN.ipynb
+│   ├── 04-SVM
+|   |   └── 04-SVM.ipynb
+│   ├── 05-Cross_Val
+|   |   ├── CNN.db
+|   |   └── 05-Cross-val.ipynb
+│   └── 06-Testing
+|       ├── saved_models (includes pre-calculated models)
+|       └── 06-Final_testing.ipynb
 ├── Report
-│   ├── Final_Report.pdf
-│   └── figures
+│   └── Final_Report.pdf
 ├── requirements.txt
 └── README.md
 ```
