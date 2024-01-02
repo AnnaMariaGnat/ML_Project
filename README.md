@@ -5,6 +5,13 @@
 - [Group Members](#group-members)
 - [Project Description](#project-description)
 - [Data](#data)
+- [Project Requirements](#project-requirements)
+    - [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
+    - [Data Preprocessing](#data-preprocessing)
+    - [Model Development](#model-development)
+    - [Model Training and Evaluation](#model-training-and-evaluation)
+    - [Hyperparameter Tuning](#hyperparameter-tuning)
+    - [Report Writing](#report-writing)
 - [Implementation](#implementation)
 - [Project Structure](#project-structure)
 
