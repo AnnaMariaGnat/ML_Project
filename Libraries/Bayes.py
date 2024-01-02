@@ -16,9 +16,9 @@ class Bayes_classifier(BaseEstimator):
         self.X = X
         self.y = y
         self.lda = lda_ajp(X,y)
-        self.proj_matrix = self.lda.projection_matrix()
-        self.n_features = self.proj_matrix.shape[1]
-        self.n_observations = self.proj_matrix.shape[0]
+        self.proj_data = self.lda.projection()
+        self.n_features = self.proj_data.shape[1]
+        self.n_observations = self.proj_data.shape[0]
 
 
     def class_priors(self): 
@@ -35,7 +35,7 @@ class Bayes_classifier(BaseEstimator):
     def kde(self,test_x):
         kde = []
         for i in np.unique(self.y): 
-            Class_data = self.proj_matrix[self.y==i]
+            Class_data = self.proj_data[self.y==i]
             kde_feature = np.array([])
             class_n = Class_data.shape[0]
             for feature in range(self.n_features): 
