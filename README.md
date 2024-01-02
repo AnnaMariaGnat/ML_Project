@@ -80,8 +80,8 @@ The project is structured as follows:
 |   ├── kernel.py
 │   └── SVM.py
 ├── Notebooks
-│   ├── 00-Data_Exploration
-|   |   └── 00-Data_Exploration.ipynb
+│   ├── 00-Initial_Data_Exploration
+|   |   └── 00-Initial_Data_Exploration.ipynb
 │   ├── 01-EDA
 |   |   ├── 011-PCA.ipynb
 |   |   └── 012-LDA.ipynb
