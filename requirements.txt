@@ -3,7 +3,10 @@ matplotlib
 pandas
 scikit-learn
 plotly
+beautifulsoup4
 nbformat
+psutil
+websocket-client
 ipywidgets
 torch
 torchvision
